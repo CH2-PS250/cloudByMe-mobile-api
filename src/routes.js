@@ -4,6 +4,5 @@ const router = require("express").Router(),
 router
   .get("/:province", controller.getByProvince)
   .get("/:province/:city", controller.getByCity);
-// .get("/", controller.getByCurrentLocation);
 
 module.exports = router;

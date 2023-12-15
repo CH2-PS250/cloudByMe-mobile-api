@@ -1,5 +1,5 @@
 {
-  "name": "cloudbyme-rest-api",
+  "name": "cloudbyme-mobile-api",
   "version": "1.0.0",
   "description": "REST API prakiraan cuaca 35 provinsi 3 harian, sumber BMKG",
   "main": "src/server.js",
@@ -12,7 +12,6 @@
     "cuaca",
     "prakiraan cuaca"
   ],
-  "homepage": "https://github.com/renomureza/cuaca-gempa-rest-api#readme",
   "license": "MIT",
   "dependencies": {
     "axios": "^0.21.1",
