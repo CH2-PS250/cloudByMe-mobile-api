@@ -17,13 +17,33 @@ const getWeatherData = async (province) => {
 const getByProvince = async (req, res) => {
   try {
     const data = await getWeatherData(req.params.province);
+    let weatherToday = data.areas[0].params.find(
+      (param) => param.id === "weather"
+    ).times[0].name;
 
+    let adviceToText;
+    if (weatherToday === "Cerah" || weatherToday === "Cerah Berawan") {
+      adviceToText = "Hari ini " + weatherToday + ", nikmati hari Anda!";
+    } else if (weatherToday === "Berawan" || weatherToday === "Berawan Tebal") {
+      adviceToText =
+        "Hari ini " + weatherToday + ", mungkin Anda perlu membawa payung.";
+    } else if (
+      weatherToday === "Udara Kabur" ||
+      weatherToday === "Asap" ||
+      weatherToday === "Kabut"
+    ) {
+      adviceToText = "Hari ini " + weatherToday + ", hati-hati di jalan!";
+    } else {
+      adviceToText =
+        "Hari ini " + weatherToday + ", jangan lupa membawa payung!";
+    }
     const partialData = {
       province: data.areas[0].domain,
       temperature: data.areas[0].params.find((param) => param.id === "t")
         .times[0].celcius,
       weatherCode: data.areas[0].params.find((param) => param.id === "weather")
         .times[0].name,
+      weatherToday: adviceToText,
       humidity: data.areas[0].params.find((param) => param.id === "hu").times[0]
         .value,
 
@@ -42,6 +62,11 @@ const getByProvince = async (req, res) => {
             temperature: time.celcius,
           };
         }),
+      windSpeed: data.areas[0].params.find((param) => param.id === "ws")
+        .times[0].kph,
+
+      windDirection: data.areas[0].params.find((param) => param.id === "wd")
+        .times[0].card,
     };
 
     return res.status(200).send(responseCreator({ data: partialData }));
@@ -64,6 +89,27 @@ const getByCity = async (req, res) => {
       return res.status(404).send(responseCreator({ message: "Not found" }));
     }
 
+    let weatherToday = weatherByCity.params.find(
+      (param) => param.id === "weather"
+    ).times[0].name;
+
+    let adviceToText;
+    if (weatherToday === "Cerah" || weatherToday === "Cerah Berawan") {
+      adviceToText = "Hari ini " + weatherToday + ", nikmati hari Anda!";
+    } else if (weatherToday === "Berawan" || weatherToday === "Berawan Tebal") {
+      adviceToText =
+        "Hari ini " + weatherToday + ", mungkin Anda perlu membawa payung.";
+    } else if (
+      weatherToday === "Udara Kabur" ||
+      weatherToday === "Asap" ||
+      weatherToday === "Kabut"
+    ) {
+      adviceToText = "Hari ini " + weatherToday + ", hati-hati di jalan!";
+    } else {
+      adviceToText =
+        "Hari ini " + weatherToday + ", jangan lupa membawa payung!";
+    }
+
     const partialData = {
       province: weatherByCity.domain,
       city: weatherByCity.description,
@@ -71,6 +117,7 @@ const getByCity = async (req, res) => {
         .times[0].celcius,
       weatherCode: weatherByCity.params.find((param) => param.id === "weather")
         .times[0].name,
+      weatherToday: adviceToText,
       humidity: weatherByCity.params.find((param) => param.id === "hu").times[0]
         .value,
 
@@ -99,10 +146,10 @@ const getByCity = async (req, res) => {
 
     return res.status(200).send(responseCreator({ data: partialData }));
   } catch (error) {
-    return res
-      .status(500)
-      .send(responseCreator({ message: "Something went wrong" }));
+    const status = error.response?.status === 404 ? 404 : 500;
+    const message = status === 404 ? "Not found" : "Something went wrong";
+    return res.status(status).send(responseCreator({ message }));
   }
 };
 
-module.exports = { getByProvince, getByCity };
+module.exports = { getByCity, getByProvince };
