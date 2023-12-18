@@ -1,8 +1,9 @@
-// const dbConfig = {
-//   host: 'IP_PUBLIK_INSTANCE_SQL',
-//   user: 'NAMA_USER',              
-//   password: 'PASSWORD',           
-//   database: 'NAMA_DATABASE'       
-// };
+const dbConfig = {
+  PORT: process.env.PORT,
+  DB_HOST: process.env.DB_HOST,
+  DB_USER: process.env.DB_USER,
+  DB_PASSWORD: process.env.DB_PASSWORD,
+  DB_NAME: process.env.DB_NAME,
+};
 
-// module.exports = dbConfig;
+module.exports = dbConfig;
